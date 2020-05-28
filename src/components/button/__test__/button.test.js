@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from '../button';
-import { render } from '@testing-library/react'
+import { render,cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom';
-
+import { createRenderer } from 'react-dom/test-utils';
+import * as renderer from 'react-test-renderer';
+afterEach(cleanup)
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
@@ -11,6 +13,16 @@ it("renders without crashing", () => {
 });
 
 it("renders button correctly", () => {
-    const {getByTestId} = render(<Button label="Click here please!"></Button>)
+    const {getByTestId} = render(<Button label="Click here please!"/>)
     expect(getByTestId('button')).toHaveTextContent("Click here please!")
+})
+
+it("renders button correctly", () => {
+    const {getByTestId} = render(<Button label="Save"/>)
+    expect(getByTestId('button')).toHaveTextContent("Save")
+})
+
+it("matches snapshot", () => {
+    const tree = renderer.create(<Button label="Save"></Button>).toJSON();
+    expect(tree).toMatchSnapshot();
 })
